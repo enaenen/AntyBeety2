@@ -1,0 +1,72 @@
+<!--
+  ~ Copyright 2018 The app Open Source Project
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<androidx.preference.PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/preference">
+    <PreferenceCategory app:title="@string/add_contract">
+        <Preference
+            app:title="연락처 추가"
+            app:summary="비상호출 연락처를 추가합니다.">
+            <intent
+                android:targetClass="com.example.thingbee_android.AddContract"
+                android:targetPackage="com.example.thingbee_android" />
+        </Preference>
+    </PreferenceCategory>
+    <PreferenceCategory app:title="@string/btn_status">
+        <SwitchPreferenceCompat
+            android:id="@+id/emergency_btn"
+            app:key="btn_maps"
+            app:title="@string/panicButton"
+            app:summary="@string/panicButton_summary"
+            app:defaultValue="true"
+            />
+        <!--<SwitchPreferenceCompat-->
+            <!--app:key="btn_news"-->
+            <!--app:title="@string/news"-->
+            <!--app:summary="@string/news_summary"-->
+            <!--app:defaultValue="true"-->
+            <!--/>-->
+        <!--<SwitchPreferenceCompat-->
+            <!--app:key="btn_stats"-->
+            <!--app:title="@string/stats"-->
+            <!--app:summary="@string/stats_summary"-->
+            <!--app:defaultValue="true"-->
+            <!--/>-->
+        <!--<SwitchPreferenceCompat-->
+            <!--app:key="btn_path"-->
+            <!--app:title="@string/path"-->
+            <!--app:summary="@string/path_summary"-->
+            <!--/>-->
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="@string/emergency">
+        <SwitchPreferenceCompat
+            app:key="emergency"
+            app:title="@string/emergency_active"
+            app:summary="볼륨 아래 버튼 3번 누르기"
+            app:defaultValue="true"
+            />
+        <ListPreference
+            app:defaultValue="@string/fakecall_default"
+            app:entries="@array/fakecall_entries"
+            app:entryValues="@array/fakecall_values"
+            app:key="fakecall"
+            app:title="@string/fakecall_cooltime"
+            app:useSimpleSummaryProvider="true" />
+    </PreferenceCategory>
+
+</androidx.preference.PreferenceScreen>
