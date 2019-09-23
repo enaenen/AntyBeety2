@@ -78,7 +78,7 @@ public class FragmentMap extends Fragment implements TMapGpsManager.onLocationCh
     public static final int REQUEST_ACCESS_FINE_LOCATION = 1000;
     public static final int SEARCH_PATH_ACITIVITY = 1;
     public static final int SEARCH_ONE_ACTIVITY =2;
-    private FacilityAnimator animator ;
+    private FacilityAnimator animator;
 
     // OnBackKeyPressedListener 인터페이스를 저장할 stack 만들기
 //    public Stack<OnBackKeyPressedListener> mFragmentBackStack = new Stack<>();
