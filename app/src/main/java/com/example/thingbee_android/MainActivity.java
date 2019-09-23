@@ -28,25 +28,15 @@ import com.google.android.material.tabs.TabLayout;
 public class MainActivity extends AppCompatActivity {
     public final static int REQUEST_CODE = 3333;
     private TextView textView;
-    private Button settings;
     private Button submit;
-    private Button buttonFakeCall;
-    private ImageButton emergencyBtn;
 
     protected static boolean isEmergencyActive = false;
     private boolean mapbtn;
     //비상호출
     private boolean emActive;
     private long pressedTime = 0;
-    private FragmentManager fm;
-    private EmergencyButtonFragment theButton;
 
     private SharedPreferences sharedPreferences;
-    private SharedPreferences.Editor editor;
-    private String value;
-
-    public static final String SHARED_PREFS = "contracts";
-    public static final String PHONENUMBER = "phoneNumber";
     private static int counter;
 
     @Override
@@ -151,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
         }
         return true;
     }
-
+//  ChatHead 권한설정
     public void startOverlayWindowService(Context context) {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
 
