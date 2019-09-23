@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         tabs.setTabGravity(tabs.GRAVITY_FILL);
 
         final ViewPager viewPager = findViewById(R.id.viewpager);
-        final TabViewAdapter tabViewAdapter = new TabViewAdapter(getSupportFragmentManager(),5);
+        final TabViewAdapter tabViewAdapter = new TabViewAdapter(getSupportFragmentManager(),3);
         viewPager.setAdapter(tabViewAdapter);
 
         //탭메뉴를 클릭하면 해당 프레그먼트로 변경-싱크화

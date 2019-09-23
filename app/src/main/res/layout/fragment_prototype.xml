@@ -5,29 +5,81 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".FragmentPrototype">
-
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/linearLayoutTmap"
+        android:layout_weight="3.5"
+        android:orientation="vertical">
+        <!--<LinearLayout-->
+            <!--android:id="@+id/linearLayoutTmap"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:orientation="vertical">-->
+        <!--</LinearLayout>-->
+    </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="3"
         android:orientation="vertical">
 
-        <LinearLayout
-            android:id="@+id/linearLayoutTmap"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-        </LinearLayout>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1">
+
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:textSize="30sp"
-            android:text="second"
-            />
+            android:layout_height="wrap_content"
+            android:text="Share your experience"
+            android:textSize="20sp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Which category best describes what happended?"/>
+
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:spinnerMode="dropdown"
+            android:id="@+id/categorySpinner"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="when did it happend?"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/dateBtn"
+                android:text="날짜 선택"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/timeBtn"
+                android:text="시간 선택"/>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Please give a short description"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minLines="3"
+            android:maxLines="5"
+            android:scrollbars="vertical"/>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/submitButton"
+            android:text="submit"/>
     </LinearLayout>
 </LinearLayout>

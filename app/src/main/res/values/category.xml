@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="categoryArray">
+        <item>select a category</item>
+        <item>Surroundings</item>
+        <item>Verbal</item>
+        <item>Physical</item>
+    </string-array>
+
+</resources>
