@@ -2,10 +2,10 @@
 <resources>
 
     <string-array name="categoryArray">
-        <item>select a category</item>
-        <item>Surroundings</item>
-        <item>Verbal</item>
-        <item>Physical</item>
+        <item>카테고리 선택</item>
+        <item>성범죄</item>
+        <item>폭행/갈취</item>
+        <item>기타</item>
     </string-array>
 
 </resources>

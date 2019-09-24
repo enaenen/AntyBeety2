@@ -28,13 +28,13 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Share your experience"
+            android:text="신고하기"
             android:textSize="20sp"/>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Which category best describes what happended?"/>
+            android:text="카테고리"/>
 
         <Spinner
             android:layout_width="match_parent"
@@ -45,7 +45,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="when did it happend?"/>
+            android:text="발생시간"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -56,19 +56,19 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/dateBtn"
-                android:text="날짜 선택"/>
+                android:text="날짜"/>
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/timeBtn"
-                android:text="시간 선택"/>
+                android:text="시간"/>
         </LinearLayout>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Please give a short description"/>
+            android:text="설명"/>
 
         <EditText
             android:layout_width="match_parent"
