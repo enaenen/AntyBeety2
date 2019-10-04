@@ -10,6 +10,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Build;
@@ -34,15 +35,37 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.example.thingbee_android.retorift.ApiNewsService;
+import com.example.thingbee_android.retorift.ApiReportService;
+import com.example.thingbee_android.retorift.ReportInfoVO;
 import com.skt.Tmap.TMapGpsManager;
+import com.skt.Tmap.TMapMarkerItem;
 import com.skt.Tmap.TMapPoint;
 import com.skt.Tmap.TMapPolyLine;
 import com.skt.Tmap.TMapView;
 
+import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 
 /**
@@ -51,8 +74,9 @@ import java.util.Date;
 public class FragmentPrototype extends Fragment{
 
 
-    private TMapPolyLine tpolyline;
-
+    private Retrofit retrofit;
+    private List<ReportInfoVO> reports;
+    private ApiReportService reportService;
 
     private boolean compassFlag = false;    //  나침반 모드
     private boolean sightFlag=false;  // 현 위치 모드
@@ -67,6 +91,8 @@ public class FragmentPrototype extends Fragment{
     private Button timeButton;//시간 선택 버튼
     private Button submit;//확인 버튼
     private ImageButton btnSight; // 내 위치 버튼
+    private Spinner category;
+    private TextView comment;
 
     private TMapView tMapView;
     private TMapGpsManager gps; // 현재 위치 gps
@@ -107,7 +133,9 @@ public class FragmentPrototype extends Fragment{
                 }
             }
         });
+        //지도 초기화
         initGps();
+        //나침반 버튼(현재위치 버튼)
         view.findViewById(R.id.btnSight).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -115,9 +143,20 @@ public class FragmentPrototype extends Fragment{
             }
         });
 
+        //버튼 바인딩
         dateButton=view.findViewById(R.id.dateBtn);
         timeButton=view.findViewById(R.id.timeBtn);
         submit = view.findViewById(R.id.submitButton);
+        category = view.findViewById(R.id.categorySpinner);
+        comment = view.findViewById(R.id.commentArea);
+
+        //retrofit 초기화
+
+        retrofit=new Retrofit.Builder()
+                .baseUrl(ApiReportService.API_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        reportService = retrofit.create(ApiReportService.class);
 
 //        tMapView.setCenterPoint( 126.985302, 37.570841 ); // 지도 중심 화면 조정
         //카테고리 선택 설정
@@ -135,11 +174,11 @@ public class FragmentPrototype extends Fragment{
                         new DatePickerDialog.OnDateSetListener() {
 
                             @Override
-                            public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-
+                            public void onDateSet(DatePicker datePicker, int year, int monthOfYear, int dayOfMonth) {
+                                dateButton.setText(""+year+"-"+(monthOfYear+1)+"-"+dayOfMonth);
                             }
 
-                        },date.getYear(), date.getMonth(), date.getDate());
+                        },date.getYear()+1900, date.getMonth(), date.getDate());
                 datePickerDialog.show();
             }
         });
@@ -152,7 +191,8 @@ public class FragmentPrototype extends Fragment{
                 Date date = new Date(now);
                 TimePickerDialog timePickerDialog =  new TimePickerDialog(view.getContext(), new TimePickerDialog.OnTimeSetListener() {
                     @Override
-                    public void onTimeSet(TimePicker timePicker, int i, int i1) {
+                    public void onTimeSet(TimePicker timePicker, int hour, int min) {
+                        timeButton.setText(""+hour+"-"+min);
                     }
                 },date.getHours(),date.getMinutes(),false);
                 timePickerDialog.show();
@@ -170,11 +210,75 @@ public class FragmentPrototype extends Fragment{
             @Override
             public void onClick(View view) {
                 tpoint=tMapView.getCenterPoint();
-                Toast.makeText(mContext.getApplicationContext(), ""+tpoint.getLatitude()+tpoint.getLongitude(),Toast.LENGTH_LONG).show();
+                //Toast.makeText(mContext.getApplicationContext(), ""+tpoint.getLatitude()+" AND "+tpoint.getLongitude(),Toast.LENGTH_LONG).show();
+                reportSubmit(tpoint.getLatitude(),tpoint.getLongitude());
+                report();
             }
         });
 
         return view;
+    }
+    //submit을 눌렀을때 report
+    public void reportSubmit(double lat, double lon){
+        Map<String,Object> map = new HashMap<String,Object>();
+        String oDate  = dateButton.getText()+"-"+timeButton.getText();
+
+        map.put("lat", lat);
+        map.put("lon",lon);
+        map.put("address","temp");
+        map.put("category",category.getSelectedItem().toString());
+        map.put("comment",comment);
+        map.put("date",oDate);
+        Call<Integer> call = reportService.addReport(map);
+        call.enqueue(new Callback<Integer>() {
+            @Override
+            public void onResponse(Call<Integer> call, Response<Integer> response) {
+                Toast.makeText(mContext.getApplicationContext(), response.toString(),Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onFailure(Call<Integer> call, Throwable t) {
+                Toast.makeText(mContext.getApplicationContext(), "fail",Toast.LENGTH_LONG).show();
+            }
+        });
+
+
+    }
+    public void report(){
+        TMapPoint leftTopPoint = tMapView.getLeftTopPoint();
+        TMapPoint rightBottomPoint = tMapView.getRightBottomPoint();
+
+        Map<String, Object> params = new HashMap<String,Object>();
+
+        double top = leftTopPoint.getLatitude();
+        double left = leftTopPoint.getLongitude();
+        double bottom = rightBottomPoint.getLatitude();
+        double right = rightBottomPoint.getLongitude();
+
+        params.put("top",top);
+        params.put("left",left);
+        params.put("right",right);
+        params.put("bottom",bottom);
+
+        Call<List<ReportInfoVO>> call = reportService.searchReport(params);
+        call.enqueue(new Callback<List<ReportInfoVO>>(){
+
+            @Override
+            public void onResponse(Call<List<ReportInfoVO>> call, Response<List<ReportInfoVO>> response) {
+                List<ReportInfoVO> result = response.body();
+                if(result!=null){
+                    reports.clear();
+                    reports.addAll(result);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<ReportInfoVO>> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
+
+
     }
 
     @Override
@@ -199,12 +303,10 @@ public class FragmentPrototype extends Fragment{
     public void onSight(View view){
         // 현위치, 나침반 모드 끄기
         if (sightFlag == true && compassFlag == true) {
-
             hidePresentLocation();
         }
         // 현위치만 표시되어있을때 나침반 모드 켜기
         else if(sightFlag == true){
-
             onCompassMode();
         }
         // 현 위치 모드 켜기
@@ -287,4 +389,165 @@ public class FragmentPrototype extends Fragment{
             return true;
         }
     }
+
+/*
+    /// 리포트 찾기
+    public void searchFacility() throws JSONException {
+        TMapPoint leftTopPoint = tMapView.getLeftTopPoint();
+        TMapPoint rightBottomPoint = tMapView.getRightBottomPoint();
+
+        double top = leftTopPoint.getLatitude();
+        double left = leftTopPoint.getLongitude();
+        double bottom = rightBottomPoint.getLatitude();
+        double right = rightBottomPoint.getLongitude();
+
+        try {
+//            new HttpThread(getString(R.string.searchFacilityURL) +
+            new HttpThread("http://think.powerlinux.co.kr/api/map/search/mobile" +
+                    "?la="+bottom+
+                    "&ka="+top+
+                    "&ea="+left+
+                    "&ja="+right+
+                    "&facilFlag="+ URLEncoder.encode(facility.getFacilitiesFlag(),"UTF-8")+
+                    "&facilName="+ URLEncoder.encode(String.valueOf(facility.getFacilitiesName()),"UTF-8")).start();
+        } catch (UnsupportedEncodingException | JSONException e) {
+            e.printStackTrace();
+        }
+//            }
+//        },500);
+    }
+
+    // 리포트를 지도에 표시하는 스레드
+    private class HttpThread extends Thread {
+        String url;
+        String result;
+
+        public HttpThread(String url){
+            this.url  = url;
+        }
+
+        public void run() {
+            try{
+                HttpURLConnection conn =
+                        (HttpURLConnection) new URL(url).openConnection();
+                conn.setRequestMethod("GET");
+                conn.setDoInput(true); // 서버에서 오는 데이터 수신
+
+                int status = conn.getResponseCode();
+                InputStream is ;
+                if(status != HttpURLConnection.HTTP_OK){
+                    is = conn.getErrorStream();
+                }
+                else {
+                    is = conn.getInputStream();
+                }
+
+                BufferedReader br = new BufferedReader(
+                        new InputStreamReader(is,getString(R.string.encoding)) );
+
+                StringBuffer buffer = new StringBuffer();
+                String line = br.readLine();
+                while(line != null){
+                    buffer.append(line);
+                    line = br.readLine();
+                }
+                br.close();
+                result = buffer.toString();
+                if(status != HttpURLConnection.HTTP_OK) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
+                        }
+                    });
+                    return;
+                }
+                // 에러가 발생하지 않은 경우
+                final JSONArray jsonArray = new JSONArray(result);
+                JSONArray dataArray;
+                JSONObject jsonObject ;
+                JSONObject dataObject ;
+                for(int i=0; i<jsonArray.length(); i++){
+                    try {
+                        jsonObject = jsonArray.getJSONObject(i);
+                        if(jsonObject.isNull("data")) { continue;}
+                        dataArray = (JSONArray) jsonObject.get("data");
+
+                        List<TMapMarkerItem> tempList = null;  // 시설물 배열 동적으로 결정할 임시
+
+                        switch ((String) jsonObject.get("name")){
+                            case "cctv":
+                                bitmap =  BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.cctv_color);
+                                tempList = cctvList;
+                                break;
+                            case "bell":
+                                bitmap =  BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.bell_color);
+                                tempList = bellList;
+                                break;
+                            case "guard":
+                                bitmap =  BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.protect_color);
+                                tempList = protectList;
+                                break;
+                            case "convenience":
+                                bitmap =  BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.shop_color);
+                                tempList = shopList;
+                                break;
+                            case "light":
+                                bitmap =  BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.lamp_color);
+                                tempList = lampList;
+                                break;
+                            case "police":
+                                bitmap =  BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.police_color);
+                                tempList = policeList;
+                                break;
+                            default :
+                                break;
+                        }
+
+
+                        for(int j = 0; j< dataArray.length(); j++){
+                            TMapMarkerItem markerItem = new TMapMarkerItem();
+                            dataObject = (JSONObject) dataArray.get(j);
+                            TMapPoint tMapPoint = new TMapPoint((double) dataObject.get("lat"),(double) dataObject.get("lng"));
+
+                            markerItem.setIcon(bitmap);
+                            markerItem.setPosition(0.5f,0.5f);
+                            markerItem.setTMapPoint(tMapPoint);
+                            markerItem.setName((String) dataObject.get("code"));
+                            tMapView.addMarkerItem((String) dataObject.get("code"),markerItem);
+
+                            tempList.add(markerItem);   // 시설물 배열에 마커 추가
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                // 스레드로 시설물 표시
+//                runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//
+//
+//                    }
+//                });
+            }
+            catch(Exception e ){e.printStackTrace();}
+        }
+    }
+
+    // 시설물 숨기기
+    public void hideFacility(final List<TMapMarkerItem> list){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                for(int i=0; i<list.size(); i++ ){
+                    String id = list.get(i).getID();
+                    tMapView.removeMarkerItem(id);
+                }
+            }
+        });
+        list.clear();
+    }
+*/
+
 }
