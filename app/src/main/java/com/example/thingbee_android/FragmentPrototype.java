@@ -209,14 +209,30 @@ public class FragmentPrototype extends Fragment{
         submit.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
+                //유효성 체크
+                if(validCheck()) {
+                    Toast.makeText(mContext.getApplicationContext(), "카테고리 혹은 날짜를 선택해주세요.",Toast.LENGTH_LONG).show();
+                    return;
+                }
+
                 tpoint=tMapView.getCenterPoint();
                 //Toast.makeText(mContext.getApplicationContext(), ""+tpoint.getLatitude()+" AND "+tpoint.getLongitude(),Toast.LENGTH_LONG).show();
                 reportSubmit(tpoint.getLatitude(),tpoint.getLongitude());
-                report();
+                //report();
             }
         });
 
         return view;
+    }
+    public boolean validCheck(){
+        if( category.getSelectedItem().toString().equals("카테고리 선택"))
+            return true;
+        if(dateButton.getText().equals("날짜"))
+            return true;
+        if( timeButton.getText().equals("시간"))
+            return true;
+
+        return false;
     }
     //submit을 눌렀을때 report
     public void reportSubmit(double lat, double lon){
@@ -227,18 +243,18 @@ public class FragmentPrototype extends Fragment{
         map.put("lon",lon);
         map.put("address","temp");
         map.put("category",category.getSelectedItem().toString());
-        map.put("comment",comment);
+        map.put("comments",comment.getText());
         map.put("date",oDate);
         Call<Integer> call = reportService.addReport(map);
         call.enqueue(new Callback<Integer>() {
             @Override
             public void onResponse(Call<Integer> call, Response<Integer> response) {
-                Toast.makeText(mContext.getApplicationContext(), response.toString(),Toast.LENGTH_LONG).show();
+                Toast.makeText(mContext.getApplicationContext(), "성공적으로 등록되었습니다.",Toast.LENGTH_LONG).show();
             }
 
             @Override
             public void onFailure(Call<Integer> call, Throwable t) {
-                Toast.makeText(mContext.getApplicationContext(), "fail",Toast.LENGTH_LONG).show();
+                Toast.makeText(mContext.getApplicationContext(), "등록에 실패하였습니다.",Toast.LENGTH_LONG).show();
             }
         });
 

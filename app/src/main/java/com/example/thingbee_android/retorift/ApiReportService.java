@@ -10,7 +10,7 @@ import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
 
 public interface ApiReportService {
-    String API_URL = "http://localhost:8088/api/report/";
+    String API_URL = "http://192.168.0.12:8088/api/report/";
 
     @GET("search")
     Call<List<ReportInfoVO>> searchReport(@QueryMap Map<String,Object> params);

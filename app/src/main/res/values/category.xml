@@ -2,7 +2,7 @@
 <resources>
 
     <string-array name="categoryArray">
-        <item>카테고리 선택</item>
+        <item>선택</item>
         <item>성범죄</item>
         <item>폭행/갈취</item>
         <item>기타</item>
