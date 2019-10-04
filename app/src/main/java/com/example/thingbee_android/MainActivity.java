@@ -51,11 +51,11 @@ public class MainActivity extends AppCompatActivity {
 //        tabs.addTab(tabs.newTab().setText("뉴스").setIcon(R.drawable.menu_article_img));
 //        tabs.addTab(tabs.newTab().setText("통계").setIcon(R.drawable.menu_statics_img));
         tabs.addTab(tabs.newTab().setText("설정").setIcon(R.drawable.menu_option_img));
-        //tabs.addTab(tabs.newTab().setText("프로토타입"));
+        tabs.addTab(tabs.newTab().setText("신고"));
         tabs.setTabGravity(tabs.GRAVITY_FILL);
 
         final ViewPager viewPager = findViewById(R.id.viewpager);
-        final TabViewAdapter tabViewAdapter = new TabViewAdapter(getSupportFragmentManager(),5);
+        final TabViewAdapter tabViewAdapter = new TabViewAdapter(getSupportFragmentManager(),3);
         viewPager.setAdapter(tabViewAdapter);
 
         //탭메뉴를 클릭하면 해당 프레그먼트로 변경-싱크화
@@ -95,22 +95,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.buttonSettings:
-                startActivity(new Intent(this, SettingsActivity.class));
-                break;
-            case R.id.buttonNews:
-                startActivity(new Intent(this, NewsActivity.class));
-                break;
-            case R.id.buttonStats:
-                startActivity(new Intent(this, StatsActivity.class));
-                break;
-            case R.id.buttonMaps:
-                startActivity(new Intent(this, MapMain.class));
-                break;
-        }
-    }
 
     //볼륨 다운 버튼 3번을 눌렀을때 비상호출 작동
     public boolean onKeyDown(int keyCode, KeyEvent event) {

@@ -29,11 +29,9 @@ public class TabViewAdapter extends FragmentPagerAdapter {
             case 1:
                 FragmentSettings tab4 = new FragmentSettings();
             return tab4;
-            case 2:
+            default:
                 FragmentPrototype tab5 = new FragmentPrototype();
                 return tab5;
-            default:
-                return null;
         }
     }
 

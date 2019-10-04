@@ -28,6 +28,7 @@
         </intent-filter>
         </activity>
         <activity
+            android:windowSoftInputMode="adjustResize"
             android:name=".MapMain"
             android:theme="@style/AppNoTheme" />
         <activity android:name=".StatsActivity" />

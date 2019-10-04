@@ -7,6 +7,7 @@
     tools:context=".MainActivity"
     android:orientation="vertical">
 
+
 <!--    <fragment
         android:id="@+id/menu_topbar"
         android:name="com.example.thingbee_android.MenuTopbar"
