@@ -16,12 +16,12 @@ public class ReportInfoVO {
 	@SerializedName("date")
 	private String date;
 	@SerializedName("comments")
-	private int comments;
+	private String comments;
 	@SerializedName("category")
 	private String category;
 
 	public ReportInfoVO(){}
-	public ReportInfoVO(int id, double lat, double lon, String address, String date, int comments, String category) {
+	public ReportInfoVO(int id, double lat, double lon, String address, String date, String comments, String category) {
 		this.id = id;
 		this.lat = lat;
 		this.lon = lon;
@@ -71,11 +71,11 @@ public class ReportInfoVO {
 		this.date = date;
 	}
 
-	public int getComments() {
+	public String getComments() {
 		return comments;
 	}
 
-	public void setComments(int comments) {
+	public void setComments(String comments) {
 		this.comments = comments;
 	}
 
@@ -114,7 +114,7 @@ public class ReportInfoVO {
 		result = 31 * result + (int) (temp ^ (temp >>> 32));
 		result = 31 * result + address.hashCode();
 		result = 31 * result + date.hashCode();
-		result = 31 * result + comments;
+		result = 31 * result + comments.hashCode();
 		result = 31 * result + category.hashCode();
 		return result;
 	}

@@ -29,5 +29,4 @@ public interface ApiService {
     @POST("comments")
     Call<ResponseBody> getPostCommentStr(@Field("postId") String postId);
 
-
 }
