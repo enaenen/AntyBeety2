@@ -285,14 +285,14 @@ public class FragmentPrototype extends Fragment{
 
                         switch (rep.getCategory()){
                             case "성범죄":
-                                bitmap = BitmapFactory.decodeResource(getActivity().getApplicationContext().getResources(), R.drawable.police_color);
+                                bitmap = BitmapFactory.decodeResource(getActivity().getApplicationContext().getResources(), R.drawable.red);
                                 break;
                             case "기타":
-                                bitmap = BitmapFactory.decodeResource(getActivity().getApplicationContext().getResources(), R.drawable.protect_color);
+                                bitmap = BitmapFactory.decodeResource(getActivity().getApplicationContext().getResources(), R.drawable.blue);
                                 break;
                                 //폭행/갈취
                             default:
-                                bitmap = BitmapFactory.decodeResource(getActivity().getApplicationContext().getResources(), R.drawable.bell_color);
+                                bitmap = BitmapFactory.decodeResource(getActivity().getApplicationContext().getResources(), R.drawable.orange);
                                 break;
                         }
 
