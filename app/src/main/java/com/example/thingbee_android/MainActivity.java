@@ -43,19 +43,19 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        // getSupportActionBar().setTitle("메인화면");ㅍ
+        // getSupportActionBar().setTitle("메인화면");
 
         //Tab View
         TabLayout tabs = findViewById(R.id.tabs);
         tabs.addTab(tabs.newTab().setText("지도").setIcon(R.drawable.menu_map_img));
-//        tabs.addTab(tabs.newTab().setText("뉴스").setIcon(R.drawable.menu_article_img));
-//        tabs.addTab(tabs.newTab().setText("통계").setIcon(R.drawable.menu_statics_img));
+       tabs.addTab(tabs.newTab().setText("뉴스").setIcon(R.drawable.menu_article_img));
+        tabs.addTab(tabs.newTab().setText("통계").setIcon(R.drawable.menu_statics_img));
+        tabs.addTab(tabs.newTab().setText("신고").setIcon(R.drawable.menu_report_img ));
         tabs.addTab(tabs.newTab().setText("설정").setIcon(R.drawable.menu_option_img));
-        tabs.addTab(tabs.newTab().setText("신고"));
         tabs.setTabGravity(tabs.GRAVITY_FILL);
 
         final ViewPager viewPager = findViewById(R.id.viewpager);
-        final TabViewAdapter tabViewAdapter = new TabViewAdapter(getSupportFragmentManager(),3);
+        final TabViewAdapter tabViewAdapter = new TabViewAdapter(getSupportFragmentManager(),5);
         viewPager.setAdapter(tabViewAdapter);
 
         //탭메뉴를 클릭하면 해당 프레그먼트로 변경-싱크화
@@ -94,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
 
 
     //볼륨 다운 버튼 3번을 눌렀을때 비상호출 작동
