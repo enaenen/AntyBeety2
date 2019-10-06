@@ -574,6 +574,8 @@ public class FragmentMap extends Fragment implements TMapGpsManager.onLocationCh
         pointList.clear();
         pathInfoSafeList.clear();
         pathInfoList.clear();
+        safePolyLine.getLinePoint().clear();
+        safePolyLine.getPassPoint().clear();
         safePolyLine = new TMapPolyLine();
         // 지도에 표시된 안전경로 지우기
         getActivity().runOnUiThread(new Runnable() {
@@ -882,11 +884,6 @@ public class FragmentMap extends Fragment implements TMapGpsManager.onLocationCh
         String result;
         JSONObject data;
 
-        public SafetyPathThread(String url, JSONObject request){
-            this.url  = url;
-            this.data = request;
-        }
-
         public void run() {
             try{
                 HttpURLConnection conn =
@@ -900,7 +897,7 @@ public class FragmentMap extends Fragment implements TMapGpsManager.onLocationCh
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(mContext.getApplicationContext(), getString(R.string.noSearch), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(mContext.getApplicationContext(), getString(R.string.noSafeWaySearch), Toast.LENGTH_SHORT).show();
                         }
                     });
                     return;
@@ -944,6 +941,13 @@ public class FragmentMap extends Fragment implements TMapGpsManager.onLocationCh
                             animator.getFacilityUp().start();
                             showFragment(pathSimpleContent);
                             pathSimpleContent.changeSimpleContent(bundle);
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(mContext.getApplicationContext(), getString(R.string.noSearch), Toast.LENGTH_SHORT).show();
+                                }
+                            });
+
                         }
                     });
                     return;
@@ -972,6 +976,11 @@ public class FragmentMap extends Fragment implements TMapGpsManager.onLocationCh
                 new ShortestPathThread(getString(R.string.findPathURL)+"?version=1&appKey="+getString(R.string.tMapKey),data).start();   // 경유지 포함한 경로를 요청 보내기
             }
             catch(Exception e ){e.printStackTrace();}
+        }
+
+        public SafetyPathThread(String url, JSONObject request){
+            this.url  = url;
+            this.data = request;
         }
     }
 

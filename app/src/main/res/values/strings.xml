@@ -39,6 +39,8 @@
     <string name="start">출발지</string>
     <string name="end">도착지</string>
     <string name="noSearch">검색 결과가 없어요</string>
+    <string name="noSafeWaySearch">안전경로가 존재하지 않습니다.</string>
+
 
 
     <string name="tMapKey">eb78e65f-0177-4506-bec2-e7fbb962fb09</string>
