@@ -590,8 +590,8 @@ public class FragmentMap extends Fragment implements TMapGpsManager.onLocationCh
     public void searchSafePath(JSONObject request){
         // 안전 경로를 제시하려면 출발, 도착을 제외한 좌표가 최소 2개는 있어야한다. (우리 로직 상 어쩔 수 없다)
         if(coordinatesList.size()>3){
-//            new SafetyPathThread("http://192.168.30.244:8080/api/map/way/safe"+
-            new SafetyPathThread(getString(R.string.searchSafePathURL)+
+//          배포한 뒤 url 변경 필수
+            new SafetyPathThread("http://192.168.30.216:8089/api/map/way/safe"+
                     "?startLat="+coordinatesList.get(1).getLatitude()+
                     "&startLon="+coordinatesList.get(1).getLongitude()+
                     "&endLat="+coordinatesList.get(coordinatesList.size()-2).getLatitude()+
